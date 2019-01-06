@@ -23,13 +23,13 @@ public class CacheController {
     @ResponseBody
     public void testPutCache(ProductInfo productInfo) {
         System.out.println(productInfo.getId() + ":" + productInfo.getName());
-        cacheService.saveProductInfo(productInfo);
+        cacheService.saveProductInfo2ReidsCache(productInfo);
     }
 
     @RequestMapping("/testGetCache")
     @ResponseBody
     public ProductInfo testGetCache(Long id) {
-        ProductInfo productInfo = cacheService.findById(id);
+        ProductInfo productInfo = cacheService.getProductInfoFromLocalCache(id);
         System.out.println(productInfo.getId() + ":" + productInfo.getName());
         return productInfo;
     }
