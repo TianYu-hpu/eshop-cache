@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.roncoo.eshop.cache.model.ProductInfo;
 import com.roncoo.eshop.cache.model.ShopInfo;
 import com.roncoo.eshop.cache.service.CacheService;
+import com.roncoo.eshop.cache.mapper.ProductInfoMapper;
+import com.roncoo.eshop.cache.mapper.ShopInfoMapper;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,10 @@ public class CacheServiceImpl implements CacheService {
 
     @Resource
     private JedisCluster jedisCluster;
+    @Resource
+    private ProductInfoMapper productInfoMapper;
+    @Resource
+    private ShopInfoMapper shopInfoMapper;
 
     /**
      * 将商品信息保存到本地缓存中
@@ -106,5 +112,15 @@ public class CacheServiceImpl implements CacheService {
     public void saveShopInfo2ReidsCache(ShopInfo shopInfo) {
         String key = "shop_info_" + shopInfo.getId();
         jedisCluster.set(key, JSONObject.toJSONString(shopInfo));
+    }
+
+    @Override
+    public ProductInfo findProductInfoByIdFromDB(Integer id) {
+        return productInfoMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public ShopInfo findShopInfoByIdFromDB(Long id) {
+        return shopInfoMapper.selectByPrimaryKey(id);
     }
 }
