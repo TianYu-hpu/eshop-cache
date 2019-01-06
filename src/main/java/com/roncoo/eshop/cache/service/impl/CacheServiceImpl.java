@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  * @Date: 2019/1/5 21:51
  * @Description:  缓存Service实现类
  */
-@Service
+@Service("cacheService")
 public class CacheServiceImpl implements CacheService {
 
     public static final String CACHE_NAME = "local";
