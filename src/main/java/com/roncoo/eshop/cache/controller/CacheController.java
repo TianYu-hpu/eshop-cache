@@ -28,7 +28,7 @@ public class CacheController {
 
     @RequestMapping("/testGetCache")
     @ResponseBody
-    public ProductInfo testGetCache(Long id) {
+    public ProductInfo testGetCache(Integer id) {
         ProductInfo productInfo = cacheService.getProductInfoFromLocalCache(id);
         System.out.println(productInfo.getId() + ":" + productInfo.getName());
         return productInfo;

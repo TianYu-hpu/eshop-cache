@@ -55,7 +55,7 @@ public class Application {
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 		sqlSessionFactoryBean.setDataSource(dataSource());
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-		sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:/mybatis/*.xml"));
+		sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath*:/base/**/*.xml"));
 		return sqlSessionFactoryBean.getObject();
 	}
 

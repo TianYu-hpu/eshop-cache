@@ -36,7 +36,7 @@ public class CacheServiceImpl implements CacheService {
      * @return
      */
     @Override
-    @CachePut(value = CACHE_NAME, key = "'key_'+#productInfo.getId()")
+    @CachePut(value = CACHE_NAME, key = "'product_info_'+#productInfo.getId()")
     public ProductInfo saveLocalCache(ProductInfo productInfo) {
         return productInfo;
     }
@@ -47,7 +47,7 @@ public class CacheServiceImpl implements CacheService {
      * @return
      */
     @Override
-    @Cacheable(value = CACHE_NAME, key = "'key_'+#id")
+    @Cacheable(value = CACHE_NAME, key = "'product_info_'+#id")
     public ProductInfo getLocalCache(Long id) {
         return null;
     }
@@ -69,7 +69,7 @@ public class CacheServiceImpl implements CacheService {
      */
     @Override
     @Cacheable(value = CACHE_NAME, key = "'product_info_'+#productId")
-    public ProductInfo getProductInfoFromLocalCache(Long productId) {
+    public ProductInfo getProductInfoFromLocalCache(Integer productId) {
         return null;
     }
 

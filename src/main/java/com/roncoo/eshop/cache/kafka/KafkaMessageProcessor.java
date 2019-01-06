@@ -51,7 +51,7 @@ public class KafkaMessageProcessor implements Runnable {
      */
     private void processProductInfoChangeMessage(JSONObject messageJSONObject) {
         // 提取出商品id
-        Long productId = messageJSONObject.getLong("productId");
+        Integer productId = messageJSONObject.getInteger("productId");
 
         // 调用商品信息服务的接口
         // 直接用注释模拟：getProductInfo?productId=1，传递过去
@@ -61,8 +61,7 @@ public class KafkaMessageProcessor implements Runnable {
         // 你从一个课程里，还是学到的是里面围绕的讲解的一些核心的知识
         // 缓存架构：高并发、高性能、海量数据，等场景
 
-        String productInfoJSON = "{\"id\": 1, \"name\": \"iphone7手机\", \"price\": 5599, \"pictureList\":\"a.jpg,b.jpg\", \"specification\": \"iphone7的规格\", \"service\": \"iphone7的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", \"shopId\": 1}";
-        ProductInfo productInfo = JSONObject.parseObject(productInfoJSON, ProductInfo.class);
+        ProductInfo productInfo = cacheService.findProductInfoByIdFromDB(productId);
         cacheService.saveProductInfo2LocalCache(productInfo);
         System.out.println("===================获取刚保存到本地缓存的商品信息：" + cacheService.getProductInfoFromLocalCache(productId));
         cacheService.saveProductInfo2ReidsCache(productInfo);
@@ -73,8 +72,7 @@ public class KafkaMessageProcessor implements Runnable {
      * @param messageJSONObject
      */
     private void processShopInfoChangeMessage(JSONObject messageJSONObject) {
-        // 提取出商品id
-        Long productId = messageJSONObject.getLong("productId");
+        // 提取出店铺id
         Long shopId = messageJSONObject.getLong("shopId");
 
         // 调用商品信息服务的接口
@@ -85,8 +83,7 @@ public class KafkaMessageProcessor implements Runnable {
         // 你从一个课程里，还是学到的是里面围绕的讲解的一些核心的知识
         // 缓存架构：高并发、高性能、海量数据，等场景
 
-        String shopInfoJSON = "{\"id\": 1, \"name\": \"小王的手机店\", \"level\": 5, \"goodCommentRate\":0.99}";
-        ShopInfo shopInfo = JSONObject.parseObject(shopInfoJSON, ShopInfo.class);
+        ShopInfo shopInfo = cacheService.findShopInfoByIdFromDB(shopId);
         cacheService.saveShopInfo2LocalCache(shopInfo);
         System.out.println("===================获取刚保存到本地缓存的店铺信息：" + cacheService.getShopInfoFromLocalCache(shopId));
         cacheService.saveShopInfo2ReidsCache(shopInfo);

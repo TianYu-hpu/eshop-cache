@@ -35,7 +35,7 @@ public interface CacheService {
      * @param productId
      * @return
      */
-    ProductInfo getProductInfoFromLocalCache(Long productId);
+    ProductInfo getProductInfoFromLocalCache(Integer productId);
 
     /**
      * 将店铺信息保存到本地的ehcache缓存中
