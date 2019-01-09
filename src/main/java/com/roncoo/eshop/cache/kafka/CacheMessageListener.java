@@ -4,44 +4,45 @@ import com.alibaba.fastjson.JSONObject;
 import com.roncoo.eshop.cache.model.ProductInfo;
 import com.roncoo.eshop.cache.model.ShopInfo;
 import com.roncoo.eshop.cache.service.CacheService;
-import com.roncoo.eshop.cache.spring.SpringContext;
-import kafka.consumer.ConsumerIterator;
-import kafka.consumer.KafkaStream;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.io.IOException;
 
 /**
  * @Auther: tianyu
- * @Date: 2019/1/6 13:32
- * @Description:  Kafka消息处理线程
+ * @Date: 2019/1/6 20:49
+ * @Description:  cache-message主题消息监听
  */
-public class KafkaMessageProcessor implements Runnable {
+@Component
+@Slf4j
+public class CacheMessageListener {
 
-    private KafkaStream kafkaStream;
+    @Resource
     private CacheService cacheService;
 
-    public KafkaMessageProcessor(KafkaStream kafkaStream) {
-        this.kafkaStream = kafkaStream;
-        this.cacheService = (CacheService) SpringContext.getApplicationContext().getBean("cacheService");
-    }
+    /**
+     * 实时获取kafka数据(生产一条，监听生产topic自动消费一条)
+     * @param record
+     * @throws IOException
+     */
+    @KafkaListener(topics = {"${kafka.consumer.topic}"})
+    public void listen(ConsumerRecord<?, ?> record) throws IOException {
+        String value = (String) record.value();
+        // 首先将message转换成json对象
+        JSONObject messageJSONObject = JSONObject.parseObject(value);
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void run() {
-        ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
-        while (it.hasNext()) {
-            String message = new String(it.next().message());
+        // 从这里提取出消息对应的服务的标识
+        String serviceId = messageJSONObject.getString("serviceId");
 
-            // 首先将message转换成json对象
-            JSONObject messageJSONObject = JSONObject.parseObject(message);
-
-            // 从这里提取出消息对应的服务的标识
-            String serviceId = messageJSONObject.getString("serviceId");
-
-            // 如果是商品信息服务
-            if("productInfoService".equals(serviceId)) {
-                processProductInfoChangeMessage(messageJSONObject);
-            } else if("shopInfoService".equals(serviceId)) {
-                processShopInfoChangeMessage(messageJSONObject);
-            }
+        // 如果是商品信息服务
+        if("productInfoService".equals(serviceId)) {
+            processProductInfoChangeMessage(messageJSONObject);
+        } else if("shopInfoService".equals(serviceId)) {
+            processShopInfoChangeMessage(messageJSONObject);
         }
     }
 
@@ -88,5 +89,4 @@ public class KafkaMessageProcessor implements Runnable {
         System.out.println("===================获取刚保存到本地缓存的店铺信息：" + cacheService.getShopInfoFromLocalCache(shopId));
         cacheService.saveShopInfo2ReidsCache(shopInfo);
     }
-
 }

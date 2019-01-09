@@ -1,6 +1,5 @@
 package com.roncoo.eshop.cache.kafka;
 
-import com.roncoo.eshop.cache.listener.CacheMessageListener;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;

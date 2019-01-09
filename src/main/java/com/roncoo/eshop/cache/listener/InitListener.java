@@ -1,6 +1,5 @@
 package com.roncoo.eshop.cache.listener;
 
-import com.roncoo.eshop.cache.kafka.KafkaConsumer;
 import com.roncoo.eshop.cache.spring.SpringContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -21,8 +20,6 @@ public class InitListener implements ServletContextListener {
         ServletContext sc = sce.getServletContext();
         ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(sc);
         SpringContext.setApplicationContext(context);
-
-        new Thread(new KafkaConsumer("cache-message")).start();
     }
 
     @Override
