@@ -49,7 +49,7 @@ public class CacheController {
         }
 
         if(productInfo == null) {
-            // 就需要从数据源重新拉去数据，重建缓存，但是这里先不讲
+            productInfo = cacheService.findProductInfoByIdFromDB(productId);
         }
 
         return productInfo;
@@ -69,7 +69,7 @@ public class CacheController {
         }
 
         if(shopInfo == null) {
-            // 就需要从数据源重新拉去数据，重建缓存，但是这里先不讲
+            shopInfo = cacheService.findShopInfoByIdFromDB(shopId);
         }
 
         return shopInfo;
