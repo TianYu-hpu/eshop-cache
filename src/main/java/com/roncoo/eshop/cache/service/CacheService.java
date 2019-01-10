@@ -76,4 +76,17 @@ public interface CacheService {
      */
     ShopInfo findShopInfoByIdFromDB(Long id);
 
+    /**
+     * 从redis缓存红获取店铺信息
+     * @param shopId
+     * @return
+     */
+    ShopInfo getShopInfoFromReidsCache(Long shopId);
+
+    /**
+     * 从redis缓存中获取商品信息
+     * @param productId
+     * @return
+     */
+    ProductInfo getProductInfoFromReidsCache(Integer productId);
 }

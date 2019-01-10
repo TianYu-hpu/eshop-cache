@@ -1,5 +1,6 @@
 package com.roncoo.eshop.cache.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.roncoo.eshop.cache.model.ProductInfo;
 import com.roncoo.eshop.cache.model.ShopInfo;
@@ -122,5 +123,29 @@ public class CacheServiceImpl implements CacheService {
     @Override
     public ShopInfo findShopInfoByIdFromDB(Long id) {
         return shopInfoMapper.selectByPrimaryKey(id);
+    }
+
+    /**
+     * 从redis缓存红获取店铺信息
+     * @param shopId
+     * @return
+     */
+    @Override
+    public ShopInfo getShopInfoFromReidsCache(Long shopId) {
+        String key = "shop_info_" + shopId;
+        String value = jedisCluster.get(key);
+        return JSON.parseObject(value, ShopInfo.class);
+    }
+
+    /**
+     * 从redis缓存中获取商品信息
+     * @param productId
+     * @return
+     */
+    @Override
+    public ProductInfo getProductInfoFromReidsCache(Integer productId) {
+        String key = "product_info_" + productId;
+        String json = jedisCluster.get(key);
+        return JSONObject.parseObject(json, ProductInfo.class);
     }
 }
