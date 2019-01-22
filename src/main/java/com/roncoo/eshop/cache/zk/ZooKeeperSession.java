@@ -8,6 +8,7 @@ import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooDefs.Ids;
 import org.apache.zookeeper.ZooKeeper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -16,6 +17,7 @@ import java.util.concurrent.CountDownLatch;
  * @Date: 2019/1/10 22:18
  * @Description:
  */
+@Component
 @Slf4j
 public class ZooKeeperSession {
 
@@ -59,7 +61,7 @@ public class ZooKeeperSession {
      * 获取分布式锁
      * @param key
      */
-    public void acquireDistributedLock(String key) {
+    public void lock(String key) {
         try {
             zookeeper.create(key, "".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
             System.out.println("success to acquire lock for " + key);
@@ -86,7 +88,7 @@ public class ZooKeeperSession {
      * 释放掉一个分布式锁
      * @param key
      */
-    public void releaseDistributedLock(String key) {
+    public void unlock(String key) {
         try {
             zookeeper.delete(key, -1);
         } catch (Exception e) {
